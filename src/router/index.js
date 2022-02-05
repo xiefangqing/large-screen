@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    component: () => import('@/views/cockpit')
+    component: () => import('@/views/DataBoard')
   }
 ]
 
