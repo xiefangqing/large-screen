@@ -30,6 +30,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
+
     .header-left {
       font-size: 30px;
       font-weight: bold;

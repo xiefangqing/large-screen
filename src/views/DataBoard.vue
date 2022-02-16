@@ -49,9 +49,12 @@ export default {
 
 <style lang="scss">
   #data-board {
+    height: 100%;
+
     .el-select {
       width: 100px;
     }
+
     .slide-fade-enter-active {
       transition: all .3s ease;
     }
@@ -62,5 +65,13 @@ export default {
       transform: translateX(10px);
       opacity: 0;
     }
+
+    .main-content {
+      height: 100%;
+      background: #F6F7FA;
+    }
+
+
+
   }
 </style>
