@@ -2,10 +2,7 @@
   <div id="board-header">
     <div class="header-left">{{ title }}</div>
     <div class="header-center">
-      <slot name="center">
-        <span>{{ time }}</span>
-        <span>{{ week }}</span>
-      </slot>
+      <slot name="center"/>
     </div>
     <div class="header-right">
       <slot>
@@ -20,8 +17,6 @@
 </template>
 
 <script>
-import { getFormatTime } from '@/utils'
-
 export default {
   name: 'BoardHeader',
   props: {
@@ -38,9 +33,7 @@ export default {
   },
   data () {
     return {
-      selected: '',
-      time: getFormatTime(),
-      week: getFormatTime(true)
+      selected: ''
     }
   },
   watch: {
@@ -60,11 +53,6 @@ export default {
     } else {
       this.selected = this.optionList[0].value
     }
-  },
-  mounted () {
-    setInterval(_ => {
-      this.time = getFormatTime()
-    }, 1000)
   }
 }
 </script>

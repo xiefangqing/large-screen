@@ -1,7 +1,12 @@
 <template>
   <div id="data-board">
     <FullScreenContainer>
-      <Header title="展示大屏" :option-list="optionList" @selected="option = $event"/>
+      <Header title="展示大屏" :option-list="optionList" @selected="option = $event">
+        <template #center>
+          <span>{{ time }}</span>
+          <span>{{ week }}</span>
+        </template>
+      </Header>
       <div class="main-content">
         <transition name="slide-fade" mode="out-in">
           <div v-if="option === 'chart'" key="chart" class="chart">
@@ -41,6 +46,8 @@ import Highcharts from 'highcharts'
 import Highcharts3D from 'highcharts/highcharts-3d'
 Highcharts3D(Highcharts)
 
+import { getFormatTime } from '@/utils'
+
 export default {
   name: 'DataBoard',
   components: {
@@ -62,11 +69,17 @@ export default {
       moreCharts: [
         { name: '3D 饼图', code: '3dpie' },
         { name: '环形图', code: 'doughnut' }
-      ]
+      ],
+      
+      time: getFormatTime(),
+      week: getFormatTime(true)
     }
   },
   mounted () {
     // this.switchChart()
+    setInterval(_ => {
+      this.time = getFormatTime()
+    }, 1000)
   },
   methods: {
     switchChart () {
