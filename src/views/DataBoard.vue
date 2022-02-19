@@ -1,7 +1,7 @@
 <template>
   <div id="data-board">
-    <full-screen-container>
-      <board-header title="展示大屏" :option-list="optionList" @update-option="option = $event"/>
+    <FullScreenContainer>
+      <Header title="展示大屏" :option-list="optionList" @selected="option = $event"/>
       <div class="main-content">
         <transition name="slide-fade" mode="out-in">
           <div v-if="option === 'chart'" key="chart" class="chart">
@@ -29,13 +29,13 @@
           </div>
         </transition>
       </div>
-    </full-screen-container>
+    </FullScreenContainer>
   </div>
 </template>
 
 <script>
 import FullScreenContainer from '@/components/FullScreenContainer'
-import BoardHeader from '@/components/BoardHeader'
+import Header from '@/components/Header'
 
 import Highcharts from 'highcharts'
 import Highcharts3D from 'highcharts/highcharts-3d'
@@ -45,7 +45,7 @@ export default {
   name: 'DataBoard',
   components: {
     FullScreenContainer,
-    BoardHeader
+    Header
   },
   data () {
     return {
@@ -56,7 +56,6 @@ export default {
       ],
       // 当前显示的主内容
       option: '',
-      
       
       chart: null,
       type: '3dpie',

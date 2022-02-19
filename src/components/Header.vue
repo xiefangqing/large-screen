@@ -2,15 +2,19 @@
   <div id="board-header">
     <div class="header-left">{{ title }}</div>
     <div class="header-center">
-      <span>{{ time }}</span>
-      <span>{{ week }}</span>
+      <slot name="center">
+        <span>{{ time }}</span>
+        <span>{{ week }}</span>
+      </slot>
     </div>
     <div class="header-right">
-      <h3>
-        <select v-model="selected">
-          <option v-for="option in optionList" :value="option.value">{{ option.text }}</option>
-        </select>
-      </h3>
+      <slot>
+        <h3>
+          <select v-model="selected">
+            <option v-for="option in optionList" :value="option.value">{{ option.text }}</option>
+          </select>
+        </h3>
+      </slot>
     </div>
   </div>
 </template>
@@ -43,7 +47,7 @@ export default {
     selected: {
       handler (newValue, oldValue) {
         if (this.selected) {
-          this.$emit('update-option', newValue)
+          this.$emit('selected', newValue)
         }
       },
       immediate: true
