@@ -1,22 +1,30 @@
 <template>
   <div id="data-board">
     <full-screen-container>
-      <board-header>
-        <el-select v-model="value" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </board-header>
+      <board-header title="展示大屏" :option-list="optionList" @update-option="option = $event"/>
       <div class="main-content">
         <transition name="slide-fade" mode="out-in">
-          <div v-if="value === 1" key="chart">
-            图表
+          <div v-if="option === 'chart'" key="chart" class="chart">
+            <div class="box">
+              <h3>
+                Highcharts：
+                <select v-model="type" @change="switchChart">
+                  <option v-for="c in moreCharts" :value="c.code">{{ c.name }}</option>
+                </select>
+              </h3>
+              <div ref="high-container" class="container"></div>
+            </div>
+            <div class="box">
+              <h3>
+                ECharts：
+                <select v-model="type" @change="switchChart">
+                  <option v-for="c in moreCharts" :value="c.code">{{ c.name }}</option>
+                </select>
+              </h3>
+              <div id="container" class="container"></div>
+            </div>
           </div>
-          <div v-else key="map">
+          <div v-else-if="option === 'map'" key="map">
             地图
           </div>
         </transition>
@@ -29,6 +37,10 @@
 import FullScreenContainer from '@/components/FullScreenContainer'
 import BoardHeader from '@/components/BoardHeader'
 
+import Highcharts from 'highcharts'
+import Highcharts3D from 'highcharts/highcharts-3d'
+Highcharts3D(Highcharts)
+
 export default {
   name: 'DataBoard',
   components: {
@@ -37,11 +49,43 @@ export default {
   },
   data () {
     return {
-      value: 1,
-      options: [
-        { value: 1, label: '图表' },
-        { value: 2, label: '地图' }
+      // 主选项
+      optionList: [
+        { text: '图表', value: 'chart' },
+        { text: '地图', value: 'map' }
+      ],
+      // 当前显示的主内容
+      option: '',
+      
+      
+      chart: null,
+      type: '3dpie',
+      moreCharts: [
+        { name: '3D 饼图', code: '3dpie' },
+        { name: '环形图', code: 'doughnut' }
       ]
+    }
+  },
+  mounted () {
+    // this.switchChart()
+  },
+  methods: {
+    switchChart () {
+      const options = this.getOptions(this.type)
+      // 如果图表实例已经存在，就销毁
+      if (this.chart) {
+        this.chart.destroy()
+      }
+      this.chart = Highcharts.chart('container', options);
+    },
+    getOptions (type) {
+      if (type === '3dpie') {
+        return {
+          // ...
+        }
+      } else if (type === 'doughnut') {
+        
+      }
     }
   }
 }
@@ -67,8 +111,33 @@ export default {
     }
 
     .main-content {
-      height: 100%;
-      background: #F6F7FA;
+      //height: calc(100% - 60px);
+      padding: 8px;
+      
+      .chart {
+        display: flex;
+        flex-flow: wrap;
+        justify-content: center;
+        gap: 4px;
+        
+        .box {
+          width: 48%;
+          height: 400px;
+          border: 1px solid #ccc;
+          overflow: hidden;
+          position: relative;
+    
+          h3 {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            z-index: 10;
+          }
+        }
+      }
+
+
+
     }
 
 

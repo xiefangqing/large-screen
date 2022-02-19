@@ -10,6 +10,6 @@
     -moz-osx-font-smoothing: grayscale;
     width: 100vw;
     height: 100vh;
-    color: #424242;
+    color: #2c3e50;
   }
 </style>

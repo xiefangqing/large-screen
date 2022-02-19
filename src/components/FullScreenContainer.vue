@@ -24,14 +24,12 @@ export default {
       window.addEventListener('resize', this.debounceInitWH)
     },
     setAppScale () {
-      this.$nextTick(_ => {
-        const dom = this.$refs.scaleBox
-        const { width, height } = window.screen
-        const currentWidth = document.documentElement.clientWidth
-        dom.style.width = `${width}px`
-        dom.style.height = `${height}px`
-        dom.style.transform = `scale(${currentWidth / width})`
-      })
+      const dom = this.$refs.scaleBox
+      const { width, height } = window.screen
+      const currentWidth = document.documentElement.clientWidth
+      dom.style.width = `${width}px`
+      dom.style.height = `${height}px`
+      dom.style.transform = `scale(${currentWidth / width})`
     }
   }
 }
