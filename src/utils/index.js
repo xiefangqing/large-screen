@@ -1,12 +1,28 @@
 // 防抖
-export function debounce (delay, callback) {
-  let lastTime
+export function debounce (callback, delay) {
+  let lastTimer
   return function () {
-    clearTimeout(lastTime)
-    const [that, args] = [this, arguments]
-    lastTime = setTimeout(() => {
-      callback.apply(that, args)
+    clearTimeout(lastTimer)
+    lastTimer = setTimeout(_ => {
+      callback.apply(this, arguments)
     }, delay)
+  }
+}
+// 节流
+export function throttle(callback, delay){
+  let lastTimer,
+      startTime = Date.now()
+  return function () {
+    clearTimeout(lastTimer)
+    const [curTime, args] = [Date.now(), arguments]
+    if(curTime - startTime >= delay){
+      callback.apply(this, args)
+      startTime = curTime
+    } else {
+      lastTimer = setTimeout(_ => {
+        callback.apply(this, args)
+      }, delay)
+    }
   }
 }
 // 获取格式化后的时间（y-m-d h:i:s）或星期

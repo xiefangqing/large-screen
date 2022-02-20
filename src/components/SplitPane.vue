@@ -1,18 +1,20 @@
 <template>
   <div class="split-pane" ref="wrapper">
-    <div class="pane pane-left" :style="{ width: leftWidthPercent }"></div>
+    <div class="pane pane-left" :style="{ width: leftWidthPercent }">
+      <slot name="left"/>
+    </div>
     <div class="pane-seekbar" :style="{ width: seekbarWidth + 'px' }" @mousedown="handleMousedown"></div>
-    <div class="pane pane-right" :style="{ width: rightWidthPercent }"></div>
+    <div class="pane pane-right" :style="{ width: rightWidthPercent }">
+      <slot name="right"/>
+    </div>
   </div>
 </template>
 
 <script>
+import { throttle } from '@/utils'
+
 export default {
   name: 'SplitPane',
-  model: {
-    prop: 'defaultOffset',
-    event: 'input'
-  },
   props: {
     seekbarWidth: {
       type: Number,
@@ -25,40 +27,40 @@ export default {
   },
   data () {
     return {
-      canMove: false,
       initOffset: 0
     }
   },
   computed: {
-    trueLeftWidth () {
+    leftWidth () {
       // 边界判断
       return this.defaultOffset > 1 ? 1 : (this.defaultOffset < 0 ? 0 : this.defaultOffset) 
     },
     leftWidthPercent () {
-      return `${this.trueLeftWidth * 100}%`
+      return `${this.leftWidth * 100}%`
     },
     rightWidthPercent () {
-      return `${(1 - this.trueLeftWidth) * 100}%`
+      return `${(1 - this.leftWidth) * 100}%`
     }
   },
   methods: {
     handleMousedown (e) {
-      document.addEventListener('mousemove', this.handleMousemove)
+      this.throttleHandleMousemove = throttle(this.handleMousemove, 50)
+      document.addEventListener('mousemove', this.throttleHandleMousemove)
       document.addEventListener('mouseup', this.handleMouseup)
       this.initOffset = e.pageX - e.target.getBoundingClientRect().left
-      this.canMove = true
+      this.$refs.wrapper.style.cursor = 'col-resize'
     },
     handleMousemove (e) {
-      if (this.canMove) {
-        // getBoundingClientRect().left 获取距离视口的左偏移
-        // getBoundingClientRect().width 获取元素总宽度，包含padding和border
-        const wrapperRect = this.$refs.wrapper.getBoundingClientRect()
-        const offset = (e.pageX- this.initOffset - wrapperRect.left) / (wrapperRect.width - this.seekbarWidth)
-        this.$emit('input', offset)
-      }
+      // getBoundingClientRect().left 获取距离视口的左偏移
+      // getBoundingClientRect().width 获取元素总宽度，包含padding和border
+      const wrapperRect = this.$refs.wrapper.getBoundingClientRect()
+      const offset = (e.pageX- this.initOffset - wrapperRect.left) / (wrapperRect.width - this.seekbarWidth)
+      this.$emit('update:default-offset', offset)
     },
     handleMouseup () {
-      this.canMove = false
+      this.$refs.wrapper.style.cursor = 'auto'
+      document.removeEventListener('mousemove', this.throttleHandleMousemove)
+      document.removeEventListener('mouseup', this.handleMouseup)
     }
   }
 }
@@ -69,20 +71,11 @@ export default {
     height: 100%;
     display: flex;
     user-select: none;
-  
-    .pane {
-      &-left {
-        background: orangered;
-      }
-      
-      &-right {
-        background: purple;
-      }
-  
-      &-seekbar {
-        background: blue;
-        flex: none;  // 不让拖动条收缩
-      }
+    
+    .pane-seekbar {
+      background: red;
+      flex: none;  // 不让拖动条收缩
+      cursor: col-resize;
     }
   }
 </style>

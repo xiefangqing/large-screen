@@ -20,7 +20,14 @@
             <!--  <div ref="ECContainer" class="container"></div>-->
             <!--</div>-->
             <div class="box">
-              <SplitPane v-model="offset"/>
+              <SplitPane :default-offset.sync="offset">
+                <template #left>
+                  左边
+                </template>
+                <template #right>
+                  右边
+                </template>
+              </SplitPane>
             </div>
           </div>
           
@@ -69,7 +76,7 @@ export default {
       HCType: '',
       ECType: '',
       
-      offset: 0.8,
+      offset: 0.5,
       
       chart: null,
       type: '3dpie',
@@ -132,9 +139,7 @@ export default {
           height: 400px;
           border: 1px solid #ccc;
           overflow: hidden;
-  
-          background: cornflowerblue;
-  
+          
           .header {
             border: 0;
           }

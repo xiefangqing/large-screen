@@ -16,12 +16,12 @@ export default {
     this.setAppScale()
   },
   beforeDestroy () {
-    window.removeEventListener('resize', this.debounceInitWH)
+    window.removeEventListener('resize', this.debounceSetAppScale)
   },
   methods: {
     bindResizeCallback () {
-      this.debounceInitWH = debounce(100, this.setAppScale)
-      window.addEventListener('resize', this.debounceInitWH)
+      this.debounceSetAppScale = debounce(this.setAppScale, 100)
+      window.addEventListener('resize', this.debounceSetAppScale)
     },
     setAppScale () {
       const dom = this.$refs.scaleBox
