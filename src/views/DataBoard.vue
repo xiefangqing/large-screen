@@ -11,13 +11,16 @@
         <transition name="slide-fade" mode="out-in">
           
           <div v-if="option === 'chart'" key="chart" class="chart">
+            <!--<div class="box">-->
+            <!--  <Header title="Highcharts" :option-list.sync="HCList" @selected="HCType = $event"></Header>-->
+            <!--  <div ref="HCContainer" class="container"></div>-->
+            <!--</div>-->
+            <!--<div class="box">-->
+            <!--  <Header title="ECharts" :option-list.sync="ECList" @selected="ECType = $event"></Header>-->
+            <!--  <div ref="ECContainer" class="container"></div>-->
+            <!--</div>-->
             <div class="box">
-              <Header title="Highcharts" :option-list.sync="HCList" @selected="HCType = $event"></Header>
-              <div ref="HCContainer" class="container"></div>
-            </div>
-            <div class="box">
-              <Header title="ECharts" :option-list.sync="ECList" @selected="ECType = $event"></Header>
-              <div ref="ECContainer" class="container"></div>
+              <SplitPane v-model="offset"/>
             </div>
           </div>
           
@@ -34,18 +37,19 @@
 <script>
 import FullScreenContainer from '@/components/FullScreenContainer'
 import Header from '@/components/Header'
+import SplitPane from '@/components/SplitPane'
+import { getFormatTime } from '@/utils'
 
 import Highcharts from 'highcharts'
 import Highcharts3D from 'highcharts/highcharts-3d'
 Highcharts3D(Highcharts)
 
-import { getFormatTime } from '@/utils'
-
 export default {
   name: 'DataBoard',
   components: {
     FullScreenContainer,
-    Header
+    Header,
+    SplitPane
   },
   data () {
     return {
@@ -64,6 +68,8 @@ export default {
       option: '',
       HCType: '',
       ECType: '',
+      
+      offset: 0.8,
       
       chart: null,
       type: '3dpie',
@@ -126,7 +132,9 @@ export default {
           height: 400px;
           border: 1px solid #ccc;
           overflow: hidden;
-          
+  
+          background: cornflowerblue;
+  
           .header {
             border: 0;
           }
