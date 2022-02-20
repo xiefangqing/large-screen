@@ -1,7 +1,7 @@
 <template>
   <div id="data-board">
     <FullScreenContainer>
-      <Header title="展示大屏" :option-list="optionList" @selected="option = $event">
+      <Header title="展示大屏" title-class="f30" :option-list.sync="optionList" @selected="option = $event">
         <template #center>
           <span>{{ time }}</span>
           <span>{{ week }}</span>
@@ -9,29 +9,22 @@
       </Header>
       <div class="main-content">
         <transition name="slide-fade" mode="out-in">
+          
           <div v-if="option === 'chart'" key="chart" class="chart">
             <div class="box">
-              <h3>
-                Highcharts：
-                <select v-model="type" @change="switchChart">
-                  <option v-for="c in moreCharts" :value="c.code">{{ c.name }}</option>
-                </select>
-              </h3>
-              <div ref="high-container" class="container"></div>
+              <Header title="Highcharts" :option-list.sync="HCList" @selected="HCType = $event"></Header>
+              <div ref="HCContainer" class="container"></div>
             </div>
             <div class="box">
-              <h3>
-                ECharts：
-                <select v-model="type" @change="switchChart">
-                  <option v-for="c in moreCharts" :value="c.code">{{ c.name }}</option>
-                </select>
-              </h3>
-              <div id="container" class="container"></div>
+              <Header title="ECharts" :option-list.sync="ECList" @selected="ECType = $event"></Header>
+              <div ref="ECContainer" class="container"></div>
             </div>
           </div>
+          
           <div v-else-if="option === 'map'" key="map">
             地图
           </div>
+          
         </transition>
       </div>
     </FullScreenContainer>
@@ -56,23 +49,24 @@ export default {
   },
   data () {
     return {
-      // 主选项
+      time: getFormatTime(),
+      week: getFormatTime(true),
+      
       optionList: [
         { text: '图表', value: 'chart' },
         { text: '地图', value: 'map' }
       ],
-      // 当前显示的主内容
+      HCList: [
+        { text: '3D 饼图', value: '3dpie' },
+        { text: '环形图', value: 'doughnut' }
+      ],
+      ECList: [],
       option: '',
+      HCType: '',
+      ECType: '',
       
       chart: null,
       type: '3dpie',
-      moreCharts: [
-        { name: '3D 饼图', code: '3dpie' },
-        { name: '环形图', code: 'doughnut' }
-      ],
-      
-      time: getFormatTime(),
-      week: getFormatTime(true)
     }
   },
   mounted () {
@@ -107,10 +101,6 @@ export default {
   #data-board {
     height: 100%;
 
-    .el-select {
-      width: 100px;
-    }
-
     .slide-fade-enter-active {
       transition: all .3s ease;
     }
@@ -124,11 +114,10 @@ export default {
 
     .main-content {
       //height: calc(100% - 60px);
-      padding: 8px;
+      padding: 8px 0;
       
       .chart {
         display: flex;
-        flex-flow: wrap;
         justify-content: center;
         gap: 4px;
         
@@ -137,13 +126,9 @@ export default {
           height: 400px;
           border: 1px solid #ccc;
           overflow: hidden;
-          position: relative;
-    
-          h3 {
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            z-index: 10;
+          
+          .header {
+            border: 0;
           }
         }
       }
@@ -151,8 +136,5 @@ export default {
 
 
     }
-
-
-
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div id="board-header">
-    <div class="header-left">{{ title }}</div>
+  <div class="header">
+    <div :class="['header-left', titleClass]">{{ title }}</div>
     <div class="header-center">
       <slot name="center"/>
     </div>
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  name: 'BoardHeader',
+  name: 'Header',
   props: {
     title: {
       type: String,
@@ -26,10 +26,9 @@ export default {
     },
     optionList: {
       type: Array,
-      default () {
-        return [ { text: '无选项', value: 'no-option' } ]
-      }
-    }
+      required: true
+    },
+    titleClass: String
   },
   data () {
     return {
@@ -47,18 +46,18 @@ export default {
     }
   },
   created () {
-    // 选项列表处理
-    if (this.optionList[0].text === '无选项') {
-      this.selected = 'no-option'
-    } else {
+    if (this.optionList && this.optionList.length) {
       this.selected = this.optionList[0].value
+    } else {
+      this.$emit('update:optionList', [{ text: '无选项', value: 'no-option' }])
+      this.selected = 'no-option'
     }
   }
 }
 </script>
 
-<style lang="scss">
-  #board-header {
+<style lang="scss" scoped>
+  .header {
     height: 60px;
     border-bottom: 1px solid #ccc;
     display: flex;
@@ -67,12 +66,12 @@ export default {
     padding: 0 20px;
     position: relative;
 
-    .header-left {
-      font-size: 30px;
+    &-left {
+      font-size: 20px;
       font-weight: bold;
     }
     
-    .header-center {
+    &-center {
       position: absolute;
       top: 50%;
       left: 50%;
